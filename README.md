@@ -14,8 +14,8 @@
 | --- | --- |
 | GRANTED_ALREADY | User has already granted permission |
 | NOT_ASKED | User has never requested the permission (Possible to show permission dialog) |
-| DENIED_WITH_RATIONALE | User has denied the permission but still has a chance to request for permission dialog |
-| DENIED_WITH_NEVER_ASK | Not possible to request for permission dialog. (navigate user to App Settings) |
+| DENIED_WITH_RATIONALE | User has denied the permission but still has a chance to request for permission dialog (Possible to show permission dialog) |
+| DENIED_WITH_NEVER_ASK | Not possible to show permission dialog. (navigate user to App Settings) |
 
 <br />
 
