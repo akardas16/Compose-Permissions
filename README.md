@@ -18,6 +18,7 @@
 | DENIED_WITH_NEVER_ASK | Not possible to request for permission dialog. (navigate user to App Settings) |
 
 <br />
+
 ## Single Permission Request
 
 * Track status of permission with `permissionStatus`
@@ -39,7 +40,7 @@
 <br />
 <br />
 
-* See complete example below 
+* See complete example below for single permission request
 
 ```kotlin
 @Composable
@@ -64,7 +65,7 @@ fun Greeting() {
                 Text(text = "Permission Has already Granted")
             }
             Status.NOT_ASKED -> {//a place to request permission
-                Text(text = "No permission request made")
+                Text(text = "No permission request has made")
             }
             Status.DENIED_WITH_RATIONALE -> {
                 Text(text = "Permission has denied once but you have still have a chance to show permission popup")
@@ -81,7 +82,8 @@ fun Greeting() {
             request.launch(android.Manifest.permission.CAMERA)
             scope.launch {
                 delay(1000)
-                if (permissionStatus == Status.DENIED_WITH_NEVER_ASK && context.activity()?.hasWindowFocus() == true){
+                if (permissionStatus == Status.DENIED_WITH_NEVER_ASK
+                    && context.activity()?.hasWindowFocus() == true){ //See below for why hasWindowFocus should be true
                     context.openAppSystemSettings()
                 }
             }
