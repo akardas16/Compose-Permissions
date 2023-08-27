@@ -1,13 +1,10 @@
 # Compose-Permissions
 * A library to handle permissions in Jetpack Compose
-<br />
+
 
 ## Install
 
 * Add [`ComposePermission.kt`](https://github.com/akardas16/Compose-Permissions/blob/main/ComposePermission.kt) file to your project 
-
-<br />
-
 
 # Usage
 
@@ -21,8 +18,6 @@
 | DENIED_WITH_NEVER_ASK | Not possible to request for permission dialog. (navigate user to App Settings) |
 
 <br />
-
-
 ## Single Permission Request
 
 * Track status of permission with `permissionStatus`
