@@ -99,6 +99,14 @@ fun requestPermission(permission: String, onChangedStatus:(status: Status) -> Un
     })
 }
 
+fun Map<String,Status>.allGranted():Boolean{
+   return this.values.all { it == Status.GRANTED_ALREADY }
+}
+
+fun Map<String,Status>.allDenied():Boolean{
+    return this.values.all { it != Status.GRANTED_ALREADY }
+}
+
 
 @ChecksSdkIntAtLeast(api = Build.VERSION_CODES.M)
 private fun shouldAskPermission(): Boolean {
