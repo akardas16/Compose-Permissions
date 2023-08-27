@@ -93,43 +93,104 @@ fun Greeting() {
     }
 }
 ```
+## Multiple Permissions Request
 
+* Track status of permissions with `permissionStatus`
+```kotlin
+var permissionStatus by remember {
+        mutableStateOf(mapOf<String,Status>())
+    }
+val request = requestMultiplePermission(
+        permissions = listOf(
+            Manifest.permission.CAMERA, Manifest.permission.POST_NOTIFICATIONS
+        ), onChangedStatus = { permissionStatus = it}
+    )
+```
 <br />
 
- * Use `modifier = Modifier.iconPulse()` for icon pulse effect 
-  <p align="center">
-   Alerter with icon, title and message
-  </p>
- <p align="center">
- <img align="center" src="https://github.com/akardas16/Alerter/assets/28716129/7e036b7f-b024-44af-b8ac-0d5c3a8cd240" width="400">
-</p>
-
- 
+* To request multiple permissions
 
 ```kotlin
- var showAlert by remember { mutableStateOf(false) }
+ request.launch(arrayOf(Manifest.permission.CAMERA, Manifest.permission.POST_NOTIFICATIONS))
+``` 
+<br />
+<br />
 
- Alerter(isShown = showAlert, onChanged = {showAlert = it},
-                backgroundColor = Color(0xFFF69346)) {
-                Row(modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(),
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically) {
+* See complete example below for multiple permissions request
 
-                    Icon(imageVector = Icons.Rounded.Notifications, contentDescription = "",
-                        tint = Color.White, modifier = Modifier.padding(start = 12.dp).iconPulse())
+```kotlin
+ @Composable
+fun Greeting() {
 
-                    Column(modifier = Modifier.padding(horizontal = 12.dp)) {
-                        Text(text = "Alert Title", color = Color.White, fontWeight = FontWeight.SemiBold, fontSize = 16.sp)
-                        Text(text = "Alert text...", color = Color.White, fontSize = 14.sp)
+    var permissionStatus by remember {
+        mutableStateOf(mapOf<String,Status>())
+    }
 
-                    }
+    val request = requestMultiplePermission(
+        permissions = listOf(
+            Manifest.permission.CAMERA,
+            Manifest.permission.POST_NOTIFICATIONS
+        ), onChangedStatus = { permissionStatus = it}
+    )
+
+    Column(modifier = Modifier
+        .fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center) {
+
+        if (permissionStatus.allGranted()){
+            Text(text = "All Permissions have already Granted")
+        }
+
+        if (permissionStatus.allDenied()){
+            Text(text = "All Permissions have not Granted")
+        }
+        Row {
+            Text(text = permissionStatus.keys.first().filter { it.isUpperCase() }, fontSize = 12.sp)
+            Icon(imageVector = Icons.Default.ArrowForward, contentDescription = "")
+            Text(text = permissionStatus.values.first().name, fontSize = 12.sp)
+        }
+
+        Row {
+            Text(text = permissionStatus.keys.last().filter { it.isUpperCase() }, fontSize = 12.sp)
+            Icon(imageVector = Icons.Default.ArrowForward, contentDescription = "")
+            Text(text = permissionStatus.values.last().name, fontSize = 12.sp)
+        }
+
+        Button(onClick = {
+            //Request permission
+            request.launch(arrayOf(Manifest.permission.CAMERA,
+                Manifest.permission.POST_NOTIFICATIONS))
+
+        }) { Text("Request permissions") }
+
+    }
+}
+```
+<br />
+<br />
+
+* If all permissions have granted, `permissionStatus.allGranted()` will be true 
+* If all permissions have not granted, `permissionStatus.allDenied()` will be true
+
+```kotlin
+ fun Map<String,Status>.allGranted():Boolean{
+   return this.values.all { it == Status.GRANTED_ALREADY }
+}
+fun Map<String,Status>.allDenied():Boolean{
+    return this.values.all { it != Status.GRANTED_ALREADY }
+}
+```
+<br />
+<br />
+
+* It is not possible to observe changes, if user has manually changed permission in app settings
+* If user has denied permission with never_ask and changed permission manually, it will be better to request permission and check any window popuped or not. 
+  
+```kotlin
+ if (permissionStatus == Status.DENIED_WITH_NEVER_ASK
+         && context.activity()?.hasWindowFocus() == true){ //See below for why hasWindowFocus should be true
+                    context.openAppSystemSettings()
                 }
-            }
 ```
 
 
-
-<br />
-<br />
