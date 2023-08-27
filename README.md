@@ -187,10 +187,14 @@ fun Map<String,Status>.allDenied():Boolean{
 * If user has denied permission with never_ask and changed permission manually, it will be better to request permission and check any window popuped or not. 
   
 ```kotlin
- if (permissionStatus == Status.DENIED_WITH_NEVER_ASK
-         && context.activity()?.hasWindowFocus() == true){ 
+ request.launch(android.Manifest.permission.CAMERA)
+            scope.launch {
+                delay(1000)
+                if (permissionStatus == Status.DENIED_WITH_NEVER_ASK
+                    && context.activity()?.hasWindowFocus() == true){ //See below for why hasWindowFocus should be true
                     context.openAppSystemSettings()
                 }
+            }
 ```
 
 
