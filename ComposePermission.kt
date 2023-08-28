@@ -53,7 +53,12 @@ fun requestMultiplePermission(permissions:List<String>, onChangedStatus:(statusL
                     permissionsStatus[it.key] = Status.DENIED_WITH_RATIONALE
                     PermissionPreferences(activity).firstTimeAsking(it.key,false)
                 } else {
-                    permissionsStatus[it.key] = Status.DENIED_WITH_NEVER_ASK
+                    if (PermissionPreferences(activity).isFirstTimeAsking(it.key)){
+                        permissionsStatus[it.key] = Status.NOT_ASKED
+                    }else{
+                        permissionsStatus[it.key] = Status.DENIED_WITH_NEVER_ASK
+                    }
+                    
                 }
             } else {
                 permissionsStatus[it.key] = Status.GRANTED_ALREADY
@@ -91,7 +96,12 @@ fun requestPermission(permission: String, onChangedStatus:(status: Status) -> Un
                 onChangedStatus(Status.DENIED_WITH_RATIONALE)
                 PermissionPreferences(activity).firstTimeAsking(permission,false)
             } else {
-                onChangedStatus(Status.DENIED_WITH_NEVER_ASK)
+                if (PermissionPreferences(activity).isFirstTimeAsking(permission)){
+                    onChangedStatus(Status.NOT_ASKED)
+                }else{
+                    onChangedStatus(Status.DENIED_WITH_NEVER_ASK)
+                }
+
             }
         } else {
             onChangedStatus(Status.GRANTED_ALREADY)
