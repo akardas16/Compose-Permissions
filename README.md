@@ -191,7 +191,7 @@ fun Map<String,Status>.allDenied():Boolean{
             scope.launch {
                 delay(1000)
                 if (permissionStatus == Status.DENIED_WITH_NEVER_ASK
-                    && context.activity()?.hasWindowFocus() == true){ //See below for why hasWindowFocus should be true
+                    && context.activity()?.hasWindowFocus() == true){ 
                     context.openAppSystemSettings()
                 }
             }
